@@ -21,33 +21,40 @@ $mail->Subject = 'Contact from web-page';
 $mail->isHTML(true);
 $mail->CharSet = 'UTF-8';
 
-if (!empty($_POST)){
-    $name = htmlspecialchars($_POST['name']);
-    $from = htmlspecialchars($_POST['email']);
-    $phone = $_POST['phone'];
-    $message = htmlspecialchars($_POST['message']);
-    $honeypot = $_POST['url'];
-    if (!empty($honeypot)){
-        echo json_encode (array('status'=> 0, 'message'=>'There was a problem'));
+$whitelist = array (
+    'name',
+    'email',
+    'phone',
+    'message',
+);
 
+foreach ($whitelist as $key ) {
+    $fields[$key] = $_POST[$key];
+}
+
+foreach ( $fields as $field => $data ){
+    if (empty($data)){
+        $message = 'Lūdzu, aizpildiet'. $field. 'lauku.';
+        echo json_encode (array('status->0', 'message' -> $message));
+    }
+    $fields[$field] = htmlspecialchars($data);
+}
+
+if (!empty($_POST)){
+    if (!empty($_POST['url'])){
+        echo json_encode (array('status'=> 0, 'message'=>'There was a problem'));
         die(); 
     }
-    if (empty ($name) || empty ($from) || empty ($phone) || empty ($message) ){
-        echo json_encode (array('status'=>0, 'message'=> 'A required field was left empty'));
-
-        die();
-    }
-    $from = filter_var($from, FILTER_VALIDATE_EMAIL);
     
-    if(!$from){
+    $fields['email'] = filter_var($fields['email'], FILTER_VALIDATE_EMAIL);
+    if(!$fields['email']){
         echo json_encode(array('status'=>0, 'message'=>'Email adress is not valid, please try again'));
-
         die();
     }
-    $mail->From=$from;
-    $mail->FromName = $name;
-    $mail->Body = $message. '<br>'. '<br>'. 'vārds: '. $name. '<br>'. 'epasts: '. $from. '<br>'. 'mob.tel: '. $phone;
-    $mail->AddReplyTo($from, $name);
+    $mail->From=$fields['email'];
+    $mail->FromName = $fields['name'];
+    $mail->Body = $fields['message']. '<br>'. '<br>'. 'vārds: '. $fields['name']. '<br>'. 'epasts: '. $fields['email']. '<br>'. 'mob.tel: '. $fields['phone'];
+    $mail->AddReplyTo($fields['email'], $fields['name']);
 
     if ($mail->Send ()){
         echo json_encode(array('status'=>1, 'message'=>'Email sent succesfully'));
