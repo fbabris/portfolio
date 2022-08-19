@@ -28,7 +28,7 @@ h1, h2 {
 }
 
 .container{
-    padding-left: 1rem; 
+    padding: 1rem; 
 }
 
 .section-header{
@@ -178,6 +178,10 @@ input[type=number] {
     #home_header{
         justify-content: flex-start; 
     }
+    &_container{
+        padding-top: 0; 
+        padding-bottom: 0; 
+    }
     &_title{
         font-size: 4rem;
     }
@@ -232,7 +236,10 @@ input[type=number] {
         display: block;
         margin-bottom: 0; 
     }
-    
+}
+
+#linkedin {
+    margin-right: 0;
 }
 
 /*--------------------------------------------------------------------------------------------------
@@ -290,6 +297,10 @@ skills stile*/
     }
 }
 
+#first_skills_header{
+    margin-top: 0;
+}
+
 /*-------------------------------------------------------------------------------------
 portfolio stile*/
 
@@ -343,7 +354,6 @@ contact */
         align-items: center;
         &>div{
             width: 40%;
-            
             input, textarea {
                 color: #909090; 
                 margin: 0 auto;
@@ -404,7 +414,7 @@ footer*/
     align-items: center;
     justify-content: space-around;
     background-color: black;
-    padding: 5vh 0; 
+    padding: 5vh 1rem; 
     & > * {
         margin-bottom: 3rem;
         text-align: center;
@@ -439,6 +449,13 @@ footer*/
         justify-content: center !important;
     }
     .home_centering{
+        text-align: center !important;
+        margin-top: 3rem !important;
+    }
+    .form > div {
+        width: 80% !important;
+    }
+    h4 {
         text-align: center !important;
     }
   }

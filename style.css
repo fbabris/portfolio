@@ -25,7 +25,7 @@ h1, h2 {
 }
 
 .container {
-  padding-left: 1rem;
+  padding: 1rem;
 }
 
 .section-header {
@@ -170,6 +170,10 @@ input[type=number] {
 .home #home_header {
   justify-content: flex-start;
 }
+.home_container {
+  padding-top: 0;
+  padding-bottom: 0;
+}
 .home_title {
   font-size: 4rem;
 }
@@ -223,6 +227,10 @@ input[type=number] {
   margin-bottom: 0;
 }
 
+#linkedin {
+  margin-right: 0;
+}
+
 /*--------------------------------------------------------------------------------------------------
 quote*/
 .quote {
@@ -272,6 +280,10 @@ skills stile*/
   text-transform: uppercase;
   line-height: 150%;
   letter-spacing: 0.2rem;
+}
+
+#first_skills_header {
+  margin-top: 0;
 }
 
 /*-------------------------------------------------------------------------------------
@@ -383,7 +395,7 @@ footer*/
   align-items: center;
   justify-content: space-around;
   background-color: black;
-  padding: 5vh 0;
+  padding: 5vh 1rem;
 }
 .footer > * {
   margin-bottom: 3rem;
@@ -418,6 +430,13 @@ footer*/
     justify-content: center !important;
   }
   .home_centering {
+    text-align: center !important;
+    margin-top: 3rem !important;
+  }
+  .form > div {
+    width: 80% !important;
+  }
+  h4 {
     text-align: center !important;
   }
 }
