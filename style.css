@@ -450,4 +450,26 @@ footer*/
   #menu_pc {
     display: flex;
   }
+}
+@media (max-width: 1482px) {
+  #menu_pc, #menu_scrolldown {
+    width: 100%;
+    background-color: black;
+    justify-content: space-around;
+  }
+  .home {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+}
+@media (max-width: 1200px) {
+  .home_photo {
+    width: 80%;
+  }
+}
+@media (max-width: 1050px) {
+  .home_photo {
+    width: 100%;
+  }
 }/*# sourceMappingURL=style.css.map */

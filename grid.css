@@ -91,8 +91,9 @@
 }
 
 @media (min-width: 768px){
-    .home{
-        width: 95%; 
+    .home_text{
+        width: 90%; 
+        margin: 2rem auto;
     }
 }
 @media (max-width: 768px) {
