@@ -243,22 +243,14 @@ input[type=number] {
 }
 
 /*--------------------------------------------------------------------------------------------------
-quote*/
+review*/
 
-.quote{
+.review{
     color: white;
     background: linear-gradient(90.18deg, #1D1D1D 31.74%, #1D1D1D 90.49%, #1D1D1D 90.49%);
-    &_title{
+    &_name{
         padding-left: 4rem;
-        font-size: 3rem;
-        font-family: 'Raleway', sans-serif;
-        margin-block: 0;
-        font-weight: 700;
-        line-height: 138.68%;
-        letter-spacing: 18.54%;
-        h5{
-            margin: 2rem 0; 
-        } 
+        font-size: 2rem;
     }
     &_text{
         padding-left: 4rem;
@@ -267,7 +259,11 @@ quote*/
         text-align: justify; 
         padding-bottom: 3rem; 
     }
-    &_link{
+    &_date{
+        padding-left: 4rem;
+        padding-bottom: 2rem;
+    }
+    &_btn{
         padding-bottom:3rem; 
         a{
             text-decoration: none;
@@ -284,8 +280,81 @@ quote*/
     }
 }
 
+#review_container{
+    background-color: rgba(0, 0, 0, 0.747);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; 
+}
+
+#review_form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: black;
+    padding: 5rem;
+    >*{
+        width: 60%;
+        background-color: black;
+        display:flex;
+        justify-content: center; 
+        >*{
+            width: 100%;
+            background-color: inherit;
+            color: white;
+            border-bottom: 3px solid white;
+            border-left: 3px solid white;
+            border-top-style: hidden;
+            border-right-style: hidden;
+            margin-bottom: 5rem; 
+            text-align: center;
+            line-height: 150%;
+            font-family: "Raleway", sans-serif;
+            font-size: 1.5rem;
+            &:focus{
+                outline: none;
+            }
+            &::placeholder{
+                color: white;
+                font-family: 'Raleway', sans-serif;
+                font-size: 1.5rem;
+            }
+        }
+        >.button{
+            width: auto;
+            border-bottom-style: hidden;
+            border-right: 3px solid white;
+            cursor: pointer;
+            padding: 0.6rem 3rem; 
+        }
+    }
+}
+
+#rev_status_messages{
+    margin-top: 1rem;
+    width: 100%;
+    height: 7rem;
+}
+#rev_server_message{
+    border: 0;
+}
+
+#review_close{
+    margin-bottom:0;
+    text-align: center;
+}
+
+
 /*--------------------------------------------------------------------------------------------------------------------------
-skills stile*/
+skills style*/
 
 .skills{
     &_names{
@@ -302,7 +371,7 @@ skills stile*/
 }
 
 /*-------------------------------------------------------------------------------------
-portfolio stile*/
+portfolio style*/
 
 .portfolio{
     padding: 0; 
@@ -398,12 +467,6 @@ contact */
     font-size: 2rem;
     padding-left: 2rem; 
 }
-.success {
-    background-color: green;
-}
-.error {
-    background-color: red;
-}
 
 /*---------------------------------------------------------------------------------------------
 footer*/
@@ -437,6 +500,18 @@ footer*/
         margin-bottom: 0;
     }
 }
+
+//----global classes----
+
+.success {
+    background-color: green !important;
+}
+.error {
+    background-color: red !important;
+}
+
+
+//----media queries----
 
 @media (max-width: 768px) {
     #menu_mobile {

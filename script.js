@@ -4,7 +4,6 @@ let contactPosition = rect(document.querySelector('.contact'));
 let navbar = document.querySelector(".menu").querySelectorAll("a");
 let menuScrollbar = document.querySelector("#nav-wrapper").querySelectorAll('a');
 let portfolio_nav = document.querySelector('.portfolio_nav').querySelectorAll('a');
-let toggleButton = document.querySelector('.menu_toggle');
 
 //----updating vertical position variables in case of browser resize----
 
@@ -70,17 +69,32 @@ function setActiveClassOnClick(items){
 
 //----toggling mobile menu between open/closed state----
 
-toggleButton.addEventListener("click", function(){
-    let toggleMenu = document.querySelector('.menu_items');
-    if (toggleButton.classList.contains("open")){
-        toggleButton.classList.replace("open", "closed");
-        toggleMenu.classList.replace("closed", "open");
-        document.querySelector('#menu_mobile').classList.remove('hidden');
+document.querySelector('.menu_toggle').addEventListener('click', function(e){
+  e.preventDefault();
+  toggleElement(document.querySelector('.menu_toggle'), document.querySelector('.menu_items'), document.querySelector('#menu_mobile'));
+});
+
+document.querySelector('.review_btn').addEventListener('click', function(e){
+  e.preventDefault();
+  toggleElement(document.querySelector('.review_btn'), document.querySelector('#review_form'), document.querySelector('#review_container'));
+});
+
+function toggleElement(toggleHook, toggleElm, toggleBlock) {
+    if (toggleHook.classList.contains('open')){
+        toggleHook.classList.replace('open', 'closed');
+        toggleElm.classList.replace('closed', 'open');
+        toggleBlock.classList.remove('hidden');
     }
-    toggleButton.classList.replace("closed", "open");
-    toggleMenu.classList.replace("open", "closed");
-    document.querySelector('#menu_mobile').classList.add('hidden');
-}); 
+    else {toggleHook.classList.replace("closed", "open");
+    toggleElm.classList.replace("open", "closed");
+    toggleBlock.classList.add('hidden')};
+}; 
+
+function closeReview(){
+    document.querySelector('.review_btn').classList.replace("closed", "open");
+    document.querySelector('#review_form').classList.replace("open", "closed");
+    document.querySelector('#review_container').classList.add('hidden')
+}
 
 //----showing slide depending on active navbar option----
 
@@ -93,16 +107,22 @@ function setActiveSlide(slideId){
 }
 
 //----email request handler
-
+let btn1 = document.getElementById('submit');
 let form = document.querySelector('.form');
-let target = document.getElementById('status_messages');
-let serverMessage = document.getElementById('server_message');
+let target;
+let serverMessage;
 form.addEventListener('submit', function(e) {
   e.preventDefault();
 
+  target = document.getElementById('status_messages');
+  serverMessage = document.getElementById('server_message'); 
+  
+  btn1.disabled = true;
+  btn1.value = 'Lūdzu uzgaidiet!';  
+
   const formData = new FormData(this);
 
-  fetch('api.php?api-name=email', {
+  fetch('./Helpers/includes/Email.inc.php', {
     method: 'post',
     body: formData
   }).then(function(response){
@@ -124,47 +144,68 @@ form.addEventListener('submit', function(e) {
           target.classList.remove('error');
           serverMessage.textContent = '';
         }, 4000);
+    btn1.value = 'Iesniegt';
+    btn1.disabled = false;
+  });
+});
+
+//----review request handler
+
+let reviewForm = document.getElementById('review_form');
+reviewForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  target = document.getElementById('rev_status_messages');
+  serverMessage = document.getElementById('rev_server_message');
+
+  const reviewformData = new FormData(this);
+
+  fetch('./Helpers/includes/Review.inc.php?api=new_review', {
+    method: 'post',
+    body: reviewformData
+  }).then(function(response){
+    return response.text();
+  }).then(function (text){
+    text=JSON.parse(text);
+    if (text.status == 1){
+      target.classList.remove('error');
+      target.classList.add('success');
+      reviewForm.reset();
+    }
+    else if (text.status == 0){
+      target.classList.remove('success');
+      target.classList.add('error');
+    }
+    serverMessage.textContent = text.srvmessage;
+        setTimeout(function(){
+          target.classList.remove('success');
+          target.classList.remove('error');
+          serverMessage.textContent = '';
+          closeReview();
+        }, 4000);
   });
 });
 
 
 
-
-  // let req = new XMLHttpRequest();
-  // req.open('POST', 'api.php')
-  // req.send(data);
-  // req.onreadystatechange = function(){
-  //   if(this.readyState==4&& this.status ==200){
-  //     let response = JSON.parse(req.responseText);
-  //     let responseStatus = response.status;
-  //     let target = document.querySelector('#status_messages');
-  //     let serverMessage = document.getElementById('server_message');
-  //     if (responseStatus == 1){
-  //       target.classList.remove('error');
-  //       target.classList.add('success');
-  //       form.reset();
-  //     }
-  //     else if (responseStatus == 0){
-  //       target.classList.remove('success');
-  //       target.classList.add('error');
-  //     }
-  //     serverMessage.textContent = response.message;
-  //     setTimeout(function(){
-  //       target.classList.remove('success');
-  //       target.classList.remove('error');
-  //       serverMessage.textContent = '';
-  //     }, 4000);
-  //   }
-  // };  
-
-
-//----disabling the submit button for 5 seconds after form is submitted to prevent multiple submissions----
-
-function timeout(){
-  let btn = document.getElementById('submit');
-  btn.disabled = true;
-  setTimeout(function(){
-    btn.disabled = false;
-  }, 5000)
+function renderNextReview(name, text, date){
+  let reviewTemplate=document.getElementById('review').content;
+  let clone = document.importNode(reviewTemplate, true);
+  clone.querySelector('.review_name').textContent = name;
+  clone.querySelector('.review_text').textContent = text;
+  clone.querySelector('.review_date').textContent = date;
+  document.getElementById('review_row').appendChild(clone);
 }
 
+// ---- onload event for rendering all reviews
+
+window.addEventListener('load', ()=>{
+  fetch('./Helpers/includes/Review.inc.php').then(function(response){
+    return response.text();
+  }).then(function (text){
+    let shmext = JSON.parse(text);
+    for (review in shmext){
+      renderNextReview(shmext[review]['user_name'], shmext[review]['review_text'], shmext[review]['review_date']);
+    }
+  });
+});

@@ -1,6 +1,10 @@
+<?php
+    include './Helpers/includes/autoloader.inc.php';
+?>
+
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="LV">
 
 <head>
     <meta charset="UTF-8">
@@ -12,6 +16,7 @@
 </head>
 
 <body>
+
     <header class="site-header">
         <div class="container home_container">
             <div class="menu_toggle open">
@@ -107,35 +112,39 @@
         </div>
     </section>
 
-    <section class="section" id="quote">
-        <div class="container quote">
+    <section class="section">
+        <div class="container review">
+
+            <div class="row" id="review_row"></div>
+            
+            <template id="review">
+                <div class="col4">
+                    <img src="#" alt="" id="img1">
+                    <p class="review_name"></p>
+                    <p class="review_text"></p>
+                    <p class="review_date"></p>
+                </div>
+            </template> 
 
             <div class="row">
-                <div class="col12 quote_title">
-                    <h5>------</h5>
+                <div class="col12 open review_btn">
+                    <a href="#">+</a> 
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col6 quote_text">
-                    <p>
-                        Lorem Ipsum is simply dummy text of the printing and 
-                        typesetting industry. Lorem Ipsum has been the industry's 
-                        standard dummy text ever since the 1500s, when an unknown printer 
-                        took a galley of type and scrambled it to make a type specimen 
-                        book. It has survived not only five centuries, but also the 
-                        leap into electronic typesetting, remaining essentially unchanged. 
-                        It was popularised in the 1960s with the release of Letraset sheets 
-                        containing Lorem Ipsum passages, and more recently with desktop publishing 
-                        software like Aldus PageMaker including versions of Lorem Ipsum.
-                    </p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col12 quote_link">
-                    <a href="#">Lasīt Vairāk</a> 
-                </div>
+            <div class="row hidden" id="review_container">
+                <form class='col12 closed' id="review_form">
+                    <div><input type="text" placeholder="Vārds, Uzvārds*" name="name" required></div>
+                    <div><input type="email" placeholder="e-pasta adrese*" name="email" required></div>
+                    <div><textarea id="review" name="review" placeholder='Atsauksme*' required></textarea></div>
+                    <div><button class="button" onclick="document.getElementById('profile_picture').click()">Pievienot profila attēlu</button></div>
+                    <div><input type="file" name="picture" id="profile_picture" style="display:none"></div> 
+                    <div style="display: none;"><input type='hidden' name='review-url' placeholder="URL"></div>
+                    <div><input class="button" type="submit" value="Iesniegt atsauksmi" id="review_submit"></div>
+                    <div class='hidden' id="review_status"><p id="review_servermsg"></p></div>
+                    <div><button class='button' id="review_close" onclick="closeReview()">Aizvērt</button></div>
+                    <div id="rev_status_messages"><p id="rev_server_message"></p></div>
+                    </form>
             </div>
 
         <div>
@@ -334,13 +343,14 @@
 
             <div class="row">
                 <form class='col12 form'>
-                    <div><input type="text" placeholder="vārds, uzvārds*" name="name" required></div>
-                    <div><input type="email" placeholder="e-pasta adrese*" name="email" required></div>
-                    <div><input type="number" oninput="validity.valid||(value='');" placeholder="tālruņa nummurs*" name="phone" required></div>
-                    <div><textarea id="message" name="message" placeholder='Ziņa*' required></textarea></div>
+                    <div><input type="text" placeholder="vārds, uzvārds*" name="contact_name" required></div>
+                    <div><input type="email" placeholder="e-pasta adrese*" name="contact_email" required></div>
+                    <div><input type="text" placeholder="tālruņa nummurs*" name="contact_phone" required></div>
+                    <div><textarea id="message" name="contact_message" placeholder='Ziņa*' required></textarea></div>
                     <div style="display: none;"><input type='hidden' name='url' placeholder="URL"></div>
-                    <div><input class="button" type="submit" value="Iesniegt" id="submit"></div>
+                    <div><input class="button" type="submit" value="Iesniegt" id="submit" name='submit'></div>
                     <div id="status_messages"><p id="server_message"></p></div>
+                </form>
             </div>
         </div>
     </section>
@@ -396,7 +406,6 @@
 
         </div>
     </section>
-
     <script src="script.js"></script>
 </body>
 </html>
