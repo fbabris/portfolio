@@ -150,15 +150,24 @@ form.addEventListener('submit', function(e) {
 });
 
 //----review request handler
+document.getElementById('upload_button').addEventListener('click', (e)=>{
+  e.preventDefault();
+  document.getElementById('profile_picture').click();
+});
+
+let profilePicture = document.getElementById('profile_picture');
 
 let reviewForm = document.getElementById('review_form');
+let btn2 = document.getElementById('review_submit');
 reviewForm.addEventListener('submit', function(e) {
   e.preventDefault();
-
+  console.log(profilePicture.files[0]);
   target = document.getElementById('rev_status_messages');
   serverMessage = document.getElementById('rev_server_message');
-
+  btn2.disabled = true;
+  btn2.value = 'lūdzu, uzgaidiet!'
   const reviewformData = new FormData(this);
+  reviewformData.append('profile_picture', profilePicture.files[0]);
 
   fetch('./Helpers/includes/Review.inc.php?api=new_review', {
     method: 'post',
@@ -176,6 +185,8 @@ reviewForm.addEventListener('submit', function(e) {
       target.classList.remove('success');
       target.classList.add('error');
     }
+    btn2.disabled = false;
+    btn2.value = 'Iesniegt atsauksmi';
     serverMessage.textContent = text.srvmessage;
         setTimeout(function(){
           target.classList.remove('success');
@@ -186,26 +197,102 @@ reviewForm.addEventListener('submit', function(e) {
   });
 });
 
-
-
-function renderNextReview(name, text, date){
-  let reviewTemplate=document.getElementById('review').content;
-  let clone = document.importNode(reviewTemplate, true);
-  clone.querySelector('.review_name').textContent = name;
-  clone.querySelector('.review_text').textContent = text;
-  clone.querySelector('.review_date').textContent = date;
-  document.getElementById('review_row').appendChild(clone);
-}
-
 // ---- onload event for rendering all reviews
-
 window.addEventListener('load', ()=>{
   fetch('./Helpers/includes/Review.inc.php').then(function(response){
     return response.text();
   }).then(function (text){
     let shmext = JSON.parse(text);
+    let index = 1;
+    let reviewClass;
     for (review in shmext){
-      renderNextReview(shmext[review]['user_name'], shmext[review]['review_text'], shmext[review]['review_date']);
+      reviewClass = 'review'+index;
+      renderNextReview(shmext[review]['user_name'], shmext[review]['review_text'], shmext[review]['review_date'], reviewClass, shmext[review]['review_picture']);
+      index++;
     }
+
+    let reviews = document.querySelectorAll('.review_single');
+    reviews.forEach(review => {review.addEventListener('click', function(){
+      renderBigReview(this.id);
+      });
+    });
+
+    new Glider(document.querySelector('.glider'), {
+      // Mobile-first defaults
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      scrollLock: true,
+      dots: '.dots',
+      arrows: {
+        prev: '.glider-prev',
+        next: '.glider-next'
+      },
+      responsive: [
+        {
+          // screens greater than >= 775px
+          breakpoint: 775,
+          settings: {
+            // Set to `auto` and provide item width to adjust to viewport
+            slidesToShow: 2,
+            slidesToScroll: 2,
+            itemWidth: 150,
+            duration: 0.25
+          }
+        },{
+          // screens greater than >= 1024px
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            itemWidth: 150,
+            duration: 0.25
+          }
+        },{
+          // screens greater than >= 1485px
+          breakpoint: 1482,
+          settings: {
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            itemWidth: 150,
+            duration: 0.25
+          }
+        }
+      ]
+    });
+    // autoSlider(index);
   });
 });
+
+function renderNextReview(name, text, date, reviewClass, picture){
+  let reviewTemplate=document.getElementById('review').content;
+  let clone = document.importNode(reviewTemplate, true);
+  let div = clone.getElementById('randomId');
+  div.id = reviewClass;
+  clone.querySelector('.review_name').textContent = name;
+  clone.querySelector('.review_text').textContent = text;
+  clone.querySelector('.review_date').textContent = date;
+  clone.querySelector('.review_picture').src = "./img/profilepics/" + picture;
+  document.getElementById('review_row').appendChild(clone);
+}
+
+function renderBigReview(id){
+  let bigTemplate = document.querySelector('#reviewBig').content;
+  let bigClone = document.importNode(bigTemplate, true);
+  let reviewSrc = document.getElementById(id);
+  let bigName = reviewSrc.querySelector('.review_name').textContent;
+  let bigText = reviewSrc.querySelector('.review_text').textContent;
+  let bigDate = reviewSrc.querySelector('.review_date').textContent;
+  let bigPic = reviewSrc.querySelector('.review_picture').src;
+  bigPic = bigPic.split('/');
+  bigPic = "./img/profilepics/big/" + bigPic[bigPic.length-1];
+  bigClone.querySelector('.review_big_single_box_name').textContent = bigName;
+  bigClone.querySelector('.review_big_single_box_text').textContent = bigText;
+  bigClone.querySelector('.review_big_single_box_date').textContent = bigDate;
+  bigClone.querySelector('.review_big_single_pic_wrapped').src = bigPic;
+  document.querySelector('.review').appendChild(bigClone);
+  let bigBadButton = document.querySelector('.review_big_btn');
+    bigBadButton.addEventListener('click', function(e){
+      e.preventDefault();
+      document.querySelector('.review').removeChild(document.querySelector('.review_big'));
+  });
+}

@@ -2,13 +2,18 @@
 
 include './autoloader.inc.php';
 
-if(isset($_GET['api']) && $_GET['api'] == 'new_review'){
+if(!empty($_GET['api']) && $_GET['api'] == 'new_review'){
     $name = $_POST['name'];
     $email = $_POST['email'];
-    $review = $_POST['review'];
+    $review = $_POST['review_text'];
     $honeypot = $_POST['review-url'];
-    
-    $addReview = new ReviewController($name, $review, $email, $honeypot);
+    if(!empty($_FILES['profile_picture'])){
+        $picture = $_FILES['profile_picture'];
+    }
+    else{
+        $picture = false;
+    }
+    $addReview = new ReviewController($name, $review, $email, $honeypot, $picture);
     
     $addReview->sendReview();   
 }

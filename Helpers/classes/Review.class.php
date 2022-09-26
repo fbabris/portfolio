@@ -17,11 +17,11 @@ class Review extends Dbh {
         $connection = null;
     }
 
-    protected function saveReview($review, $userid){
+    protected function saveReview($review, $userid, $filepath){
 
         $connection=$this->connect();
-        $stmt = $connection->prepare("INSERT INTO reviews (review_text, review_date, review_status, user_id) VALUES (?, NOW(), FALSE, $userid);"); 
-        if(!$stmt->execute([$review])){
+        $stmt = $connection->prepare("INSERT INTO reviews (review_text, review_date, review_status, user_id, review_picture) VALUES (?, NOW(), FALSE, $userid, ?);"); 
+        if(!$stmt->execute([$review, $filepath])){
             $stmt = null;
             exit();
         }
